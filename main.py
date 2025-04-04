@@ -15,7 +15,7 @@ TRANSLATION_LANGUAGES = {
 }
 
 import streamlit as st
-from util.openai_service import translate_target_language  # 翻訳関数をインポート
+from util.openai_service import translate_target_language  # 翻訳関数をインポートefwefw
 from util.openai_audio_speech_service import text_to_speech_with_openai  # 音声合成関数をインポート
 
 # 画面全体を使う設定
@@ -117,7 +117,6 @@ def edit_and_generate_audio_screen():
     with col1:
         if st.button("戻る"):
             st.session_state["page"] = "top"
-            print(f'戻るボタンが押されました。ページ: {st.session_state["page"]}')
             st.session_state["processing"] = False
             # st.session_stateのaudio_dataをクリア
             if "audio_data" in st.session_state:
@@ -131,7 +130,7 @@ def edit_and_generate_audio_screen():
                   # 音声合成を実行（セッションの値を変更せずに使用）
                   audio_data = text_to_speech_with_openai(edited_translation)
                   st.session_state["audio_data"] = audio_data  # 音声データをセッションに保存
-                  st.success("音声ファイルが生成されました！ダウンロードリンクをクリックしてください。")
+                  st.success("音声ファイルが生成されました！以下で再生またはダウンロードしてください。")
               except Exception as e:
                   st.error(f"音声合成中にエラーが発生しました: {e}")
                   st.session_state["audio_data"] = None
@@ -139,6 +138,9 @@ def edit_and_generate_audio_screen():
                   st.session_state["processing"] = False  # 処理中フラグを解除
     with col3:
         if "audio_data" in st.session_state:
+            # 音声をブラウザ上で再生する機能を追加
+            st.audio(st.session_state["audio_data"], format="audio/mpeg")
+            # ダウンロードボタンを保持
             st.download_button(
                 "音声ファイルをダウンロード",
                 data=st.session_state["audio_data"],
